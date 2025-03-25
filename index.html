@@ -123,7 +123,10 @@
 
       const gallery = document.querySelector(".gallery");
 
-      images.forEach((src, index) => {
+      // Create a copy of the images array and shuffle it
+      const shuffledImages = [...images].sort(() => Math.random() - 0.5);
+
+      shuffledImages.forEach((src, index) => {
         const div = document.createElement("div");
         div.className = "image-item";
         // Stagger the slide-in animation slightly for each image
