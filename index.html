@@ -8,12 +8,27 @@
     />
     <title>✨Bilder! (●'◡'●)</title>
     <style>
-      body {
-        margin: 0;
-        padding: 0;
-        background: linear-gradient(135deg, #1a1a1a, #333333);
-        font-family: Arial, sans-serif;
-      }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            height: 100vh; /* Full height */
+            background: linear-gradient(135deg, #1a1a1a, #333333);
+            background-size: 400% 400%; /* Increase size for animation effect */
+            animation: gradientAnimation 10s ease infinite; /* Animation properties */
+        }
+
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
 
       .gallery {
         padding: 1em;
@@ -82,10 +97,10 @@
     </style>
   </head>
   <body>
-    <h2 style="text-align: center; color: white; margin-top: 1em;">Images!
+    <h2 style="text-align: center; color: white; margin-top: 1em;">Images! - <span id="romancount"></span><sup id="count"></sup>
       <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener noreferrer">
-        <img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/cc-zero.png" alt="Creative Commons Public Domain Zero" style="vertical-align: middle; margin-left: 10px; height: 2rem;" />
-      </a>
+        <img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/cc-zero.png" alt="Creative Commons Public Domain Zero" style="vertical-align: middle; margin-left: 10px; height: 2rem;"/></a>
+
   </h2 >
 
 
@@ -93,6 +108,33 @@
     <div class="gallery"></div>
 
     <script>
+      function toRoman(num) {
+            const romanNumerals = [
+                { value: 1000, numeral: 'M' },
+                { value: 900, numeral: 'CM' },
+                { value: 500, numeral: 'D' },
+                { value: 400, numeral: 'CD' },
+                { value: 100, numeral: 'C' },
+                { value: 90, numeral: 'XC' },
+                { value: 50, numeral: 'L' },
+                { value: 40, numeral: 'XL' },
+                { value: 10, numeral: 'X' },
+                { value: 9, numeral: 'IX' },
+                { value: 5, numeral: 'V' },
+                { value: 4, numeral: 'IV' },
+                { value: 1, numeral: 'I' }
+            ];
+
+            let result = '';
+            for (const { value, numeral } of romanNumerals) {
+                while (num >= value) {
+                    result += numeral;
+                    num -= value;
+                }
+            }
+            return result;
+        }
+
       const images = [
         "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdxj6qXAGeW0C4lzqmB97uA3UTRjMY8PswNkJ1",
         "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCd6d4hgQwSe0QrLiNnV5IO1pMtgBuTFx78qjCs",
@@ -118,10 +160,22 @@
         "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdJkgAzAWhujyLDRlotCKYc7FP6MagZBf08Un2",
         "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdxNdif9GeW0C4lzqmB97uA3UTRjMY8PswNkJ1",
         "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdOt6bzPkkWqZPiFomwB5E9h4zQaIOs1Lu632J",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdNTTtGmIuA9OXx2zcnShiMrWL8VRyTvjI0gDH"
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdNTTtGmIuA9OXx2zcnShiMrWL8VRyTvjI0gDH",
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdWAfP9ih4gBRaqmdYpKVFo2EZshc7fvQICUuJ",
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdCaR09xYQxjcF1egrZJ370N4U6ATLVhwaMSu2",
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdDY6zVuxO8Wp76hZyxL9QXl4Azwji1TRadeHY",
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdh5eDcbORWex7VQpSqYIAKL2XlicEP6w5GTf9",
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdzDpohdPX6gYSqWn1xvAr72TfNwUcs0EZuGhJ",
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdPWGkCn0R8WemhtjVCM19TBGyQAx4XH7Ncnof",
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdUczpndsLMFlbzWJ4Ch9aXBGw58tcVHIvseuy",
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdUczpndsLMFlbzWJ4Ch9aXBGw58tcVHIvseuy",
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdSpYy5IXdvmV0Rx3oK1GZi8rglsYFJPfN9Wjy"
       ];
 
       const gallery = document.querySelector(".gallery");
+
+      document.getElementById("romancount").innerHTML = toRoman(images.length);
+      document.getElementById("count").innerHTML = "("+images.length+")";
 
       // Create a copy of the images array and shuffle it
       const shuffledImages = [...images].sort(() => Math.random() - 0.5);
