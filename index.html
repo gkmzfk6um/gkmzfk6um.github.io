@@ -100,6 +100,7 @@
     <h2 style="text-align: center; color: white; margin-top: 1em;">Images! - <span id="romancount"></span><sup id="count"></sup>
       <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener noreferrer">
         <img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/cc-zero.png" alt="Creative Commons Public Domain Zero" style="vertical-align: middle; margin-left: 10px; height: 2rem;"/></a>
+          <h5 style="text-align: center; color: white; margin-top: 1em;">All images are in the public domain under the CC0 1.0 Universal license.</h5>
 
   </h2 >
 
@@ -169,39 +170,60 @@
         "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdPWGkCn0R8WemhtjVCM19TBGyQAx4XH7Ncnof",
         "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdUczpndsLMFlbzWJ4Ch9aXBGw58tcVHIvseuy",
         "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdUczpndsLMFlbzWJ4Ch9aXBGw58tcVHIvseuy",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdSpYy5IXdvmV0Rx3oK1GZi8rglsYFJPfN9Wjy"
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdSpYy5IXdvmV0Rx3oK1GZi8rglsYFJPfN9Wjy",
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdP555M10R8WemhtjVCM19TBGyQAx4XH7Ncnof",
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCd3UskS3JuVHqa4FB0SY6K1NyDobxezglcRZiT",
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdwI7inmZeIPHgfDUo5nKLBdqEJy0CGx8tY6ap",
+        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdwJcsB9ZeIPHgfDUo5nKLBdqEJy0CGx8tY6ap"
       ];
 
       const gallery = document.querySelector(".gallery");
 
-      document.getElementById("romancount").innerHTML = toRoman(images.length);
-      document.getElementById("count").innerHTML = "("+images.length+")";
+if (images && Array.isArray(images)) {
+  if (document.getElementById("romancount") && typeof toRoman === "function") {
+    document.getElementById("romancount").innerHTML = toRoman(images.length);
+  }
+  if (document.getElementById("count")) {
+    document.getElementById("count").innerHTML = "(" + images.length + ")";
+  }
 
-      // Create a copy of the images array and shuffle it
-      const shuffledImages = [...images].sort(() => Math.random() - 0.5);
+  const shuffledImages = [...images].sort(() => Math.random() - 0.5);
 
-      shuffledImages.forEach((src, index) => {
-        const div = document.createElement("div");
-        div.className = "image-item";
-        // Stagger the slide-in animation slightly for each image
-        div.style.animationDelay = `${index * 0.2}s`;
+  shuffledImages.forEach((src, index) => {
+    const div = document.createElement("div");
+    div.className = "image-item";
+    div.style.animationDelay = `${index * 0.15}s`;
 
-        const img = document.createElement("img");
-        img.src = src;
-        img.alt = "Art Image";
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = "Art Image";
 
-        const downloadLink = document.createElement("a");
-        downloadLink.className = "download-btn";
-        downloadLink.href = src;
-        // The 'download' attribute triggers download
-        downloadLink.setAttribute("download", "");
-        downloadLink.innerText = "Download";
+    img.style = "background-color: #707070;";
 
-        div.appendChild(img);
-        div.appendChild(downloadLink);
 
-        gallery.appendChild(div);
-      });
+    const downloadLink = document.createElement("a");
+    downloadLink.className = "download-btn";
+    downloadLink.href = src;
+
+    downloadLink.target = "_blank";
+
+    downloadLink.rel = "noopener noreferrer";
+    downloadLink.innerText = "Download";
+
+    div.appendChild(img);
+    div.appendChild(downloadLink);
+
+    gallery.appendChild(div);
+  });
+} else {
+  console.error("The 'images' array is not defined or is not an array.");
+
+  if (gallery) {
+    gallery.innerHTML =
+      "<p>Sorry, there was an error loading the images.</p>";
+  }
+}
+
     </script>
   </body>
 </html>
