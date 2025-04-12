@@ -47,6 +47,24 @@
         background-color: #707070; /* Placeholder background */
         border-radius: 4px;
         overflow: hidden;
+        min-height: 150px; /* Default minimum height for skeleton */
+      }
+
+      /* Skeleton loading animation */
+      @keyframes skeletonPulse {
+        0% {
+          background-color: #707070;
+        }
+        50% {
+          background-color: #808080;
+        }
+        100% {
+          background-color: #707070;
+        }
+      }
+
+      .image-item.skeleton {
+        animation: skeletonPulse 1.5s infinite ease-in-out;
       }
 
       .image-item img {
@@ -165,8 +183,12 @@
 
           shuffledEntries.forEach(([index, urls], arrayIndex) => {
             const div = document.createElement("div");
-            div.className = "image-item";
+            div.className = "image-item skeleton"; // Add skeleton class
             div.style.animationDelay = `${arrayIndex * 0.15}s`;
+
+            // Generate a random height for the skeleton (between 150px and 400px)
+            const randomHeight = Math.floor(Math.random() * (400 - 150 + 1)) + 150;
+            div.style.minHeight = `${randomHeight}px`;
 
             const img = document.createElement("img");
             img.src = urls.webp; // Use webp for display
@@ -176,6 +198,7 @@
             // Add load event listener to fade in the image and adjust container
             img.addEventListener('load', function() {
               img.classList.add('loaded');
+              div.classList.remove('skeleton'); // Remove skeleton class when image loads
 
               // Get the natural dimensions of the image
               const naturalWidth = img.naturalWidth;
