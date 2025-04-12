@@ -44,8 +44,9 @@
         opacity: 0;
         /* Slide in from the bottom */
         animation: slideIn 1.5s ease forwards;
-        min-height: 200px; /* Minimum height for placeholder */
         background-color: #707070; /* Placeholder background */
+        border-radius: 4px;
+        overflow: hidden;
       }
 
       .image-item img {
@@ -59,23 +60,6 @@
 
       .image-item img.loaded {
         opacity: 1;
-      }
-
-      .image-item::before {
-        content: "";
-        display: block;
-        padding-top: 75%; /* 4:3 Aspect Ratio */
-        background-color: #707070;
-        border-radius: 4px;
-      }
-
-      .image-item img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
       }
 
       .download-btn {
@@ -188,11 +172,24 @@
             img.src = urls.webp; // Use webp for display
             img.alt = "Art Image";
             img.loading = "lazy"; // Enable lazy loading
-            img.style = "background-color: #707070;";
 
-            // Add load event listener to fade in the image
+            // Add load event listener to fade in the image and adjust container
             img.addEventListener('load', function() {
               img.classList.add('loaded');
+
+              // Get the natural dimensions of the image
+              const naturalWidth = img.naturalWidth;
+              const naturalHeight = img.naturalHeight;
+
+              // Calculate the aspect ratio
+              const aspectRatio = naturalHeight / naturalWidth;
+
+              // Set a minimum height based on the aspect ratio
+              const containerWidth = div.offsetWidth;
+              const minHeight = containerWidth * aspectRatio;
+
+              // Apply the calculated height
+              div.style.minHeight = `${minHeight}px`;
             });
 
             const downloadLink = document.createElement("a");
