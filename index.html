@@ -136,101 +136,53 @@
             return result;
         }
 
-      const images = [
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdxj6qXAGeW0C4lzqmB97uA3UTRjMY8PswNkJ1",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCd6d4hgQwSe0QrLiNnV5IO1pMtgBuTFx78qjCs",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCd0WB7AQi3fGlZtTq5WRNvdyrgh2EHC7F3LaAu",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdrPuQc9ys5DqWzMACyuNjJk1iGUdVgtO8ZPQX",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdy04AptFzeYcnUD9tGTlEhuprF1ZN27QPyX5V",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdFuMxtxaylBpCx8uIjt1LnWSf6qPHRZO0vNzs",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdo6tTWaEFtQ26d8urPG03ZVq1KNUTxMjbiIFk",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdZ5y1On2RUYMomibOVA158jz4sTnGKldhLrkg",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCd05ochc3fGlZtTq5WRNvdyrgh2EHC7F3LaAue",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdWEUS97h4gBRaqmdYpKVFo2EZshc7fvQICUuJ",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdpYKQSG578QJRPFic5bDSX9rMt2GB6ywkzeEN",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdLg2vCPrji2rXpz4w9EAlBuN6SVKItUYdJ5mb",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdeHxqDTvUt1KXCwZTFN8P3vugrp0hlY64jm2a",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCde9BLurvUt1KXCwZTFN8P3vugrp0hlY64jm2a",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdG4FytTOH2QRAGCZ3gxJNpsSzy4dLhOUwMmIW",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdUXbwUQsLMFlbzWJ4Ch9aXBGw58tcVHIvseuy",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdRX4axfpSQNCdJMbwXFsxB1G5VOo0Am9W2KLZ",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCd7EGxNGMtbgpFQC48zsvieABZ61dnkVPrS23c",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdCG8OKpYQxjcF1egrZJ370N4U6ATLVhwaMSu2",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdJRSCIZaWhujyLDRlotCKYc7FP6MagZBf08Un",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdvetu9ZlrxmFSXMH7bL5vlyKkiG2AwtsCOp0Y",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdJkgAzAWhujyLDRlotCKYc7FP6MagZBf08Un2",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdxNdif9GeW0C4lzqmB97uA3UTRjMY8PswNkJ1",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdOt6bzPkkWqZPiFomwB5E9h4zQaIOs1Lu632J",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdNTTtGmIuA9OXx2zcnShiMrWL8VRyTvjI0gDH",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdWAfP9ih4gBRaqmdYpKVFo2EZshc7fvQICUuJ",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdCaR09xYQxjcF1egrZJ370N4U6ATLVhwaMSu2",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdDY6zVuxO8Wp76hZyxL9QXl4Azwji1TRadeHY",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdh5eDcbORWex7VQpSqYIAKL2XlicEP6w5GTf9",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdzDpohdPX6gYSqWn1xvAr72TfNwUcs0EZuGhJ",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdPWGkCn0R8WemhtjVCM19TBGyQAx4XH7Ncnof",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdUczpndsLMFlbzWJ4Ch9aXBGw58tcVHIvseuy",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdUczpndsLMFlbzWJ4Ch9aXBGw58tcVHIvseuy",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdSpYy5IXdvmV0Rx3oK1GZi8rglsYFJPfN9Wjy",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdP555M10R8WemhtjVCM19TBGyQAx4XH7Ncnof",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCd3UskS3JuVHqa4FB0SY6K1NyDobxezglcRZiT",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdwI7inmZeIPHgfDUo5nKLBdqEJy0CGx8tY6ap",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdeG9wcEvUt1KXCwZTFN8P3vugrp0hlY64jm2a",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdBb8Fenm4W674OiRwu2VAaNbE1cgGUkQpnHIo",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCd9MrAK5FneHihrWVX78PjBgcEs3IoZqv061yn",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdlfwE27dgPWmEUG0Sovi6taxqrd5YwcnVApHz",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCduAYeNMgJBRrxdg7AT3WHz52DFNKoqUGsnbkI",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdyVSfskzeYcnUD9tGTlEhuprF1ZN27QPyX5VS",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdRfhd1npSQNCdJMbwXFsxB1G5VOo0Am9W2KLZ",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCd731L9xMtbgpFQC48zsvieABZ61dnkVPrS23c",
-        "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdh5SyOlCRWex7VQpSqYIAKL2XlicEP6w5GTf9"
-      ];
-
       const gallery = document.querySelector(".gallery");
 
-if (images && Array.isArray(images)) {
-  if (document.getElementById("romancount") && typeof toRoman === "function") {
-    document.getElementById("romancount").innerHTML = toRoman(images.length);
-  }
-  if (document.getElementById("count")) {
-    document.getElementById("count").innerHTML = "(" + images.length + ")";
-  }
+      // Load the URL mapping from the JSON file
+      fetch('combined_url_mapping.json')
+        .then(response => response.json())
+        .then(urlMapping => {
+          const imageEntries = Object.entries(urlMapping);
 
-  const shuffledImages = [...images].sort(() => Math.random() - 0.5);
+          if (document.getElementById("romancount") && typeof toRoman === "function") {
+            document.getElementById("romancount").innerHTML = toRoman(imageEntries.length);
+          }
+          if (document.getElementById("count")) {
+            document.getElementById("count").innerHTML = "(" + imageEntries.length + ")";
+          }
 
-  shuffledImages.forEach((src, index) => {
-    const div = document.createElement("div");
-    div.className = "image-item";
-    div.style.animationDelay = `${index * 0.15}s`;
+          // Shuffle the entries
+          const shuffledEntries = [...imageEntries].sort(() => Math.random() - 0.5);
 
-    const img = document.createElement("img");
-    img.src = src;
-    img.alt = "Art Image";
+          shuffledEntries.forEach(([index, urls], arrayIndex) => {
+            const div = document.createElement("div");
+            div.className = "image-item";
+            div.style.animationDelay = `${arrayIndex * 0.15}s`;
 
-    img.style = "background-color: #707070;";
+            const img = document.createElement("img");
+            img.src = urls.webp; // Use webp for display
+            img.alt = "Art Image";
+            img.style = "background-color: #707070;";
 
+            const downloadLink = document.createElement("a");
+            downloadLink.className = "download-btn";
+            downloadLink.href = urls.hq; // Use hq for download
+            downloadLink.target = "_blank";
+            downloadLink.rel = "noopener noreferrer";
+            downloadLink.innerText = "Download";
 
-    const downloadLink = document.createElement("a");
-    downloadLink.className = "download-btn";
-    downloadLink.href = src;
+            div.appendChild(img);
+            div.appendChild(downloadLink);
 
-    downloadLink.target = "_blank";
-
-    downloadLink.rel = "noopener noreferrer";
-    downloadLink.innerText = "Download";
-
-    div.appendChild(img);
-    div.appendChild(downloadLink);
-
-    gallery.appendChild(div);
-  });
-} else {
-  console.error("The 'images' array is not defined or is not an array.");
-
-  if (gallery) {
-    gallery.innerHTML =
-      "<p>Sorry, there was an error loading the images.</p>";
-  }
-}
+            gallery.appendChild(div);
+          });
+        })
+        .catch(error => {
+          console.error("Error loading the URL mapping:", error);
+          if (gallery) {
+            gallery.innerHTML = "<p>Sorry, there was an error loading the images.</p>";
+          }
+        });
 
     </script>
   </body>
