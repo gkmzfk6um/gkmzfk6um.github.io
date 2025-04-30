@@ -2,239 +2,395 @@
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
-    <title>✨Bilder! (●'◡'●)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Include Alpine.js via CDN -->
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <title>✨ Bilder mit Alpine.js! (●'◡'●)</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            height: 100vh; /* Full height */
-            background: linear-gradient(135deg, #1a1a1a, #333333);
-            background-size: 400% 400%; /* Increase size for animation effect */
-            animation: gradientAnimation 10s ease infinite; /* Animation properties */
+      /* --- Keep your existing CSS here --- */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        height: 100vh;
+        background: linear-gradient(135deg, #1a1a1a, #333333);
+        background-size: 400% 400%;
+        animation: gradientAnimation 10s ease infinite;
+      }
+      @keyframes gradientAnimation {
+        0% {
+          background-position: 0% 50%;
         }
-
-        @keyframes gradientAnimation {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+        50% {
+          background-position: 100% 50%;
         }
-
+        100% {
+          background-position: 0% 50%;
+        }
+      }
       .gallery {
         padding: 1em;
-        /* Masonry-like layout using CSS columns */
         column-count: 3;
         column-gap: 1em;
       }
-
       .image-item {
         position: relative;
         break-inside: avoid;
         margin-bottom: 1em;
-        opacity: 0;
-        /* Slide in from the bottom */
-        animation: slideIn 1.5s ease forwards;
-        background-color: #707070; /* Placeholder background */
+        background-color: #707070; /* Skeleton base */
         border-radius: 4px;
         overflow: hidden;
-        min-height: 150px; /* Default minimum height for skeleton */
+        min-height: 150px; /* Initial min-height */
       }
-
-      /* Skeleton loading animation */
-      @keyframes skeletonPulse {
-        0% {
-          background-color: #707070;
-        }
-        50% {
-          background-color: #808080;
-        }
-        100% {
-          background-color: #707070;
-        }
-      }
-
-      .image-item.skeleton {
-        animation: skeletonPulse 1.5s infinite ease-in-out;
-      }
-
       .image-item img {
         width: 100%;
-        height: auto; /* Preserves aspect ratio */
+        height: auto;
         display: block;
         border-radius: 4px;
-        opacity: 0;
-        transition: opacity 0.3s ease;
+        opacity: 0; /* Hidden until loaded */
+        transition: opacity 0.5s ease;
       }
-
       .image-item img.loaded {
         opacity: 1;
       }
-
-      .download-btn {
-        position: absolute;
+      /* --- Action Buttons Container (using relative positioning) --- */
+      .action-btns {
+        position: absolute; /* Position relative to image-item */
         top: 10px;
         left: 10px;
-        background-color: gray;
+        display: flex;
+        gap: 8px; /* Space between buttons */
+        z-index: 2;
+        opacity: 0; /* Hidden by default */
+        transition: opacity 0.3s ease;
+      }
+      .image-item:hover .action-btns {
+        opacity: 1; /* Show on hover */
+      }
+      .action-btn {
+        /* Removed position: absolute, top, left */
+        background-color: rgba(40, 40, 40, 0.8);
         color: #fff;
         text-decoration: none;
         padding: 6px 10px;
         border-radius: 3px;
-        opacity: 0;
-        transition: opacity 0.3s ease;
+        /* Opacity handled by parent container */
+        transition: background-color 0.3s ease;
         font-size: 14px;
+        cursor: pointer;
+        border: none;
+        line-height: 1;
       }
-
-      .image-item:hover .download-btn {
-        opacity: 1;
+      .action-btn:hover {
+        background-color: rgba(0, 0, 0, 0.9);
       }
-
-      @keyframes slideIn {
+      /* --- Modal Styles (Keep existing) --- */
+      .modal {
+        /* display: none; handled by x-show */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.85);
+        padding-top: 60px;
+        /* Add transition for fade */
+        transition: opacity 0.3s ease;
+      }
+      .modal-content {
+        margin: auto;
+        display: block;
+        max-width: 90%;
+        max-height: 85vh;
+        width: auto;
+        height: auto;
+        animation-name: zoom;
+        animation-duration: 0.4s;
+      }
+      @keyframes zoom {
         from {
-          transform: translateY(20px);
+          transform: scale(0.8);
           opacity: 0;
         }
         to {
-          transform: translateY(0);
+          transform: scale(1);
           opacity: 1;
         }
       }
-
-      /* Responsive adjustments */
+      .modal-close-btn {
+        position: absolute;
+        top: 15px;
+        right: 35px;
+        background-color: rgba(40, 40, 40, 0.8);
+        color: #fff;
+        text-decoration: none;
+        padding: 6px 12px;
+        border-radius: 3px;
+        font-size: 18px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+        border: none;
+        line-height: 1;
+      }
+      .modal-close-btn:hover,
+      .modal-close-btn:focus {
+        background-color: rgba(0, 0, 0, 0.9);
+        text-decoration: none;
+        outline: none;
+      }
+      /* --- Responsive Styles (Keep existing) --- */
       @media (max-width: 768px) {
         .gallery {
           column-count: 2;
         }
       }
-
       @media (max-width: 480px) {
         .gallery {
           column-count: 1;
+        }
+        .action-btns {
+          top: 5px;
+          left: 5px;
+          gap: 5px;
+        }
+        .action-btn {
+          padding: 5px 8px;
+          font-size: 12px;
+        }
+        .modal-content {
+          max-width: 95%;
+          max-height: 80vh;
+        }
+        .modal-close-btn {
+          top: 10px;
+          right: 15px;
+          font-size: 16px;
+          padding: 5px 10px;
         }
       }
     </style>
   </head>
   <body>
-    <h2 style="text-align: center; color: white; margin-top: 1em;">Images! - <span id="romancount"></span><sup id="count"></sup>
-      <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener noreferrer">
-        <img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/cc-zero.png" alt="Creative Commons Public Domain Zero" style="vertical-align: middle; margin-left: 10px; height: 2rem;"/></a>
-          <h5 style="text-align: center; color: white; margin-top: 1em;">All images are in the public domain under the CC0 1.0 Universal license.</h5>
+    <!-- Alpine.js Component Scope -->
+    <div
+      x-data="imageGallery()"
+      x-init="fetchImages()"
+      @keydown.escape.window="closeModal()"
+    >
+      <h2 style="text-align: center; color: white; margin-top: 1em">
+        Images! - <span x-text="romanCount"></span><sup x-text="actualCount"></sup>
+        <a
+          href="https://creativecommons.org/publicdomain/zero/1.0/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/cc-zero.png"
+            alt="Creative Commons Public Domain Zero"
+            style="vertical-align: middle; margin-left: 10px; height: 2rem;"
+        /></a>
+        <h5 style="text-align: center; color: white; margin-top: 0.5em">
+          All images are in the public domain under the CC0 1.0 Universal
+          license.
+        </h5>
+      </h2>
 
-  </h2 >
+      <div class="gallery">
+        <!-- Loading/Error Message -->
+        <template x-if="loading">
+          <p style="color: white; text-align: center">Loading images...</p>
+        </template>
+        <template x-if="error">
+          <p style="color: white; text-align: center" x-text="error"></p>
+        </template>
 
+        <!-- Image Loop -->
+        <template x-for="(image, index) in images" :key="index">
+          <div class="image-item">
+            <img
+              :src="image.urls.webp"
+              :alt="'Art Image ' + image.index"
+              loading="lazy"
+              @load="$event.target.classList.add('loaded')"
+              @error="console.error('Error loading image:', image.urls.webp)"
+              :style="{ minHeight: image.minHeight + 'px' }"
+              x-init="$nextTick(() => {
+                                const randomHeight = Math.floor(Math.random() * (400 - 150 + 1)) + 150;
+                                image.minHeight = randomHeight;
+                                $el.style.minHeight = randomHeight + 'px';
+                            })"
+            />
+            <!-- Action Buttons Container -->
+            <div class="action-btns">
+              <!-- View Button (First) -->
+              <button
+                type="button"
+                class="action-btn view-btn"
+                title="View Full Size"
+                @click="openModal(image.urls.hq)"
+              >
+                👁️
+              </button>
+              <!-- Download Button (Second) -->
+              <button
+                type="button"
+                class="action-btn download-btn"
+                @click="downloadImage($event.target, image.urls.hq)"
+                x-text="downloadButtonText"
+              >
+                Download
+              </button>
+            </div>
+          </div>
+        </template>
+      </div>
 
-
-    <div class="gallery"></div>
+      <!-- The Modal -->
+      <div
+        id="imageModal"
+        class="modal"
+        x-show="isModalOpen"
+        @click.self="closeModal()"
+        style="display: none"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+      >
+        <span class="modal-close-btn" @click="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage" :src="modalImageUrl" />
+      </div>
+    </div>
 
     <script>
+      // Helper function (can stay outside Alpine component)
       function toRoman(num) {
-            const romanNumerals = [
-                { value: 1000, numeral: 'M' },
-                { value: 900, numeral: 'CM' },
-                { value: 500, numeral: 'D' },
-                { value: 400, numeral: 'CD' },
-                { value: 100, numeral: 'C' },
-                { value: 90, numeral: 'XC' },
-                { value: 50, numeral: 'L' },
-                { value: 40, numeral: 'XL' },
-                { value: 10, numeral: 'X' },
-                { value: 9, numeral: 'IX' },
-                { value: 5, numeral: 'V' },
-                { value: 4, numeral: 'IV' },
-                { value: 1, numeral: 'I' }
-            ];
-
-            let result = '';
-            for (const { value, numeral } of romanNumerals) {
-                while (num >= value) {
-                    result += numeral;
-                    num -= value;
-                }
-            }
-            return result;
+        const romanNumerals = [
+          { value: 1000, numeral: "M" },
+          { value: 900, numeral: "CM" },
+          { value: 500, numeral: "D" },
+          { value: 400, numeral: "CD" },
+          { value: 100, numeral: "C" },
+          { value: 90, numeral: "XC" },
+          { value: 50, numeral: "L" },
+          { value: 40, numeral: "XL" },
+          { value: 10, numeral: "X" },
+          { value: 9, numeral: "IX" },
+          { value: 5, numeral: "V" },
+          { value: 4, numeral: "IV" },
+          { value: 1, numeral: "I" },
+        ];
+        let result = "";
+        if (typeof num !== "number" || num < 1) return "";
+        for (const { value, numeral } of romanNumerals) {
+          while (num >= value) {
+            result += numeral;
+            num -= value;
+          }
         }
+        return result;
+      }
 
-      const gallery = document.querySelector(".gallery");
+      // Alpine.js data and methods
+      function imageGallery() {
+        return {
+          images: [],
+          loading: true,
+          error: null,
+          isModalOpen: false,
+          modalImageUrl: "",
+          downloadButtonText: "Download", // State for download button text
 
-      // Load the URL mapping from the JSON file
-      fetch('combined_url_mapping.json')
-        .then(response => response.json())
-        .then(urlMapping => {
-          const imageEntries = Object.entries(urlMapping);
+          get romanCount() {
+            return toRoman(this.images.length);
+          },
+          get actualCount() {
+            return `(${this.images.length})`;
+          },
 
-          if (document.getElementById("romancount") && typeof toRoman === "function") {
-            document.getElementById("romancount").innerHTML = toRoman(imageEntries.length);
-          }
-          if (document.getElementById("count")) {
-            document.getElementById("count").innerHTML = "(" + imageEntries.length + ")";
-          }
+          fetchImages() {
+            fetch("combined_url_mapping.json")
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error(
+                    `HTTP error! Status: ${response.status}`
+                  );
+                }
+                return response.json();
+              })
+              .then((urlMapping) => {
+                // Convert mapping to array and shuffle
+                this.images = Object.entries(urlMapping)
+                  .map(([index, urls]) => ({ index, urls }))
+                  .sort(() => Math.random() - 0.5);
+                this.loading = false;
+              })
+              .catch((error) => {
+                console.error("Error loading the URL mapping:", error);
+                this.error =
+                  "Sorry, there was an error loading the images.";
+                this.loading = false;
+              });
+          },
 
-          // Shuffle the entries
-          const shuffledEntries = [...imageEntries].sort(() => Math.random() - 0.5);
+          openModal(imageUrl) {
+            this.modalImageUrl = imageUrl;
+            this.isModalOpen = true;
+            document.body.style.overflow = "hidden"; // Prevent background scroll
+          },
 
-          shuffledEntries.forEach(([index, urls], arrayIndex) => {
-            const div = document.createElement("div");
-            div.className = "image-item skeleton"; // Add skeleton class
-            div.style.animationDelay = `${arrayIndex * 0.15}s`;
+          closeModal() {
+            this.isModalOpen = false;
+            this.modalImageUrl = "";
+            document.body.style.overflow = ""; // Restore scroll
+          },
 
-            // Generate a random height for the skeleton (between 150px and 400px)
-            const randomHeight = Math.floor(Math.random() * (400 - 150 + 1)) + 150;
-            div.style.minHeight = `${randomHeight}px`;
+          downloadImage(buttonElement, url) {
+            const originalText = "Download";
+            buttonElement.innerText = "Downloading...";
+            buttonElement.disabled = true; // Disable button during download
 
-            const img = document.createElement("img");
-            img.src = urls.webp; // Use webp for display
-            img.alt = "Art Image";
-            img.loading = "lazy"; // Enable lazy loading
-
-            // Add load event listener to fade in the image and adjust container
-            img.addEventListener('load', function() {
-              img.classList.add('loaded');
-              div.classList.remove('skeleton'); // Remove skeleton class when image loads
-
-              // Get the natural dimensions of the image
-              const naturalWidth = img.naturalWidth;
-              const naturalHeight = img.naturalHeight;
-
-              // Calculate the aspect ratio
-              const aspectRatio = naturalHeight / naturalWidth;
-
-              // Set a minimum height based on the aspect ratio
-              const containerWidth = div.offsetWidth;
-              const minHeight = containerWidth * aspectRatio;
-
-              // Apply the calculated height
-              div.style.minHeight = `${minHeight}px`;
-            });
-
-            const downloadLink = document.createElement("a");
-            downloadLink.className = "download-btn";
-            downloadLink.href = urls.hq; // Use hq for download
-            downloadLink.target = "_blank";
-            downloadLink.rel = "noopener noreferrer";
-            downloadLink.innerText = "Download";
-
-            div.appendChild(img);
-            div.appendChild(downloadLink);
-
-            gallery.appendChild(div);
-          });
-        })
-        .catch(error => {
-          console.error("Error loading the URL mapping:", error);
-          if (gallery) {
-            gallery.innerHTML = "<p>Sorry, there was an error loading the images.</p>";
-          }
-        });
-
+            fetch(url, { mode: "cors" })
+              .then((response) => {
+                if (!response.ok)
+                  throw new Error(
+                    `Network response was not ok (${response.status})`
+                  );
+                return response.blob();
+              })
+              .then((blob) => {
+                const blobUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.style.display = "none";
+                a.href = blobUrl;
+                const filename = url.split("/").pop() || "download.jpg";
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                  document.body.removeChild(a);
+                  window.URL.revokeObjectURL(blobUrl);
+                  buttonElement.innerText = originalText; // Restore text
+                  buttonElement.disabled = false; // Re-enable button
+                }, 100);
+              })
+              .catch((err) => {
+                console.error("Download failed:", err);
+                alert("Download failed: " + err.message);
+                buttonElement.innerText = originalText; // Restore text on error
+                buttonElement.disabled = false; // Re-enable button
+              });
+          },
+        };
+      }
     </script>
   </body>
 </html>
