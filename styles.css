@@ -1,0 +1,168 @@
+/* --- Base Styles --- */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    /* Use min-height for flexibility */
+    background: linear-gradient(135deg, #1a1a1a, #333333);
+    background-size: 400% 400%;
+    animation: gradientAnimation 10s ease infinite;
+    color: #f0f0f0;
+    /* Default text color */
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* --- Header Styles --- */
+.header {
+    text-align: center;
+    color: white;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    /* Add some space below header */
+}
+
+.header h2 {
+    margin-bottom: 0.2em;
+    /* Reduce space below main title */
+}
+
+.header h5 {
+    margin-top: 0.5em;
+    font-weight: normal;
+    /* Make subtitle less prominent */
+}
+
+.cc-logo {
+    vertical-align: middle;
+    margin-left: 10px;
+    height: 2rem;
+    border: none;
+    /* Remove potential image border */
+}
+
+/* --- Gallery Styles --- */
+.gallery {
+    padding: 1em;
+    column-count: 3;
+    column-gap: 1em;
+}
+
+.image-item {
+    position: relative;
+    break-inside: avoid;
+    margin-bottom: 1em;
+    background-color: #444;
+    /* Slightly lighter skeleton */
+    border-radius: 4px;
+    overflow: hidden;
+    min-height: 150px;
+    /* Initial min-height, will be overridden */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    /* Subtle shadow */
+}
+
+.image-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+    opacity: 0;
+    /* Hidden until loaded */
+    transition: opacity 0.5s ease;
+}
+
+.image-item img.loaded {
+    opacity: 1;
+}
+
+/* --- Action Buttons Container --- */
+.action-btns {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    gap: 8px;
+    /* Space between buttons */
+    z-index: 2;
+    opacity: 0;
+    /* Hidden by default */
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    /* Prevent interaction when hidden */
+}
+
+.image-item:hover .action-btns {
+    opacity: 1;
+    /* Show on hover */
+    pointer-events: auto;
+    /* Allow interaction when visible */
+}
+
+/* --- Action Button/Link Styling --- */
+.action-btn {
+    background-color: rgba(40, 40, 40, 0.8);
+    color: #fff;
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    line-height: 1;
+    display: inline-flex;
+    /* Align icon/text nicely */
+    align-items: center;
+    justify-content: center;
+}
+
+.action-btn:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* --- Loading/Error Message --- */
+.message {
+    color: white;
+    text-align: center;
+    width: 100%;
+    /* Ensure it spans columns if needed */
+    padding: 2em 0;
+}
+
+/* --- Responsive Styles --- */
+@media (max-width: 768px) {
+    .gallery {
+        column-count: 2;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery {
+        column-count: 1;
+    }
+
+    .action-btns {
+        top: 5px;
+        left: 5px;
+        gap: 5px;
+    }
+
+    .action-btn {
+        padding: 5px 8px;
+        font-size: 12px;
+    }
+}
