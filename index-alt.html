@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Link the external CSS file -->
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Include Alpine.js via CDN -->
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <title>✨ Bilder mit Alpine.js! (●'◡'●)</title>
+  </head>
+  <body>
+    <!-- Alpine.js Component Scope -->
+    <div x-data="imageGallery()" x-init="fetchImages()">
+      <div class="header">
+        <h2>
+          Images! - <span x-text="romanCount"></span><sup x-text="actualCount"></sup>
+          <a
+            href="https://creativecommons.org/publicdomain/zero/1.0/"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Creative Commons CC0 License"
+          >
+            <img
+              src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/cc-zero.png"
+              alt="Creative Commons Public Domain Zero"
+              class="cc-logo"
+            />
+          </a>
+        </h2>
+        <h5>
+          All images are in the public domain under the CC0 1.0 Universal
+          license.
+        </h5>
+      </div>
+
+      <div class="gallery">
+        <!-- Loading/Error Message -->
+        <template x-if="loading">
+          <p class="message">Loading images...</p>
+        </template>
+        <template x-if="error">
+          <p class="message" x-text="error"></p>
+        </template>
+
+        <!-- Image Loop -->
+        <template x-for="(image, index) in images" :key="image.index">
+          <!-- Use image.index for key if unique -->
+          <div class="image-item">
+            <img
+              :src="image.urls.webp"
+              :alt="'Art Image ' + image.index"
+              loading="lazy"
+              @load="$event.target.classList.add('loaded')"
+              @error="console.error('Error loading image:', image.urls.webp)"
+              :style="{ minHeight: image.minHeight + 'px' }"
+              x-init="$nextTick(() => {
+                                const randomHeight = Math.floor(Math.random() * (400 - 150 + 1)) + 150;
+                                image.minHeight = randomHeight;
+                                $el.style.minHeight = randomHeight + 'px';
+                            })"
+            />
+            <!-- Action Buttons Container -->
+            <div class="action-btns">
+              <!-- View Link (Opens in New Tab) -->
+              <a
+                :href="image.urls.hq"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="action-btn view-btn"
+                title="View Full Size in New Tab"
+              >
+                👁️
+              </a>
+              <!-- Download Button -->
+              <button
+                type="button"
+                class="action-btn download-btn"
+                @click="downloadImage($event.target, image.urls.hq)"
+                x-text="downloadButtonText"
+                :disabled="downloading"
+              >
+                <!-- Text set by x-text -->
+              </button>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <script>
+      // Helper function (can stay outside Alpine component)
+      function toRoman(num) {
+        const romanNumerals = [
+          { value: 1000, numeral: "M" },
+          { value: 900, numeral: "CM" },
+          { value: 500, numeral: "D" },
+          { value: 400, numeral: "CD" },
+          { value: 100, numeral: "C" },
+          { value: 90, numeral: "XC" },
+          { value: 50, numeral: "L" },
+          { value: 40, numeral: "XL" },
+          { value: 10, numeral: "X" },
+          { value: 9, numeral: "IX" },
+          { value: 5, numeral: "V" },
+          { value: 4, numeral: "IV" },
+          { value: 1, numeral: "I" },
+        ];
+        let result = "";
+        if (typeof num !== "number" || num < 1) return "";
+        for (const { value, numeral } of romanNumerals) {
+          while (num >= value) {
+            result += numeral;
+            num -= value;
+          }
+        }
+        return result;
+      }
+
+      // Alpine.js data and methods
+      function imageGallery() {
+        return {
+          images: [],
+          loading: true,
+          error: null,
+          downloadButtonText: "Download", // State for download button text
+          downloading: false, // State to disable button during download
+
+          get romanCount() {
+            return toRoman(this.images.length);
+          },
+          get actualCount() {
+            // Added check for length > 0
+            return this.images.length > 0 ? `(${this.images.length})` : "";
+          },
+
+          fetchImages() {
+            this.loading = true; // Ensure loading is true at start
+            this.error = null; // Reset error
+            fetch("combined_url_mapping.json")
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error(
+                    `HTTP error! Status: ${response.status}`
+                  );
+                }
+                return response.json();
+              })
+              .then((urlMapping) => {
+                // Convert mapping to array, add minHeight placeholder, and shuffle
+                this.images = Object.entries(urlMapping)
+                  .map(([index, urls]) => ({
+                    index,
+                    urls,
+                    minHeight: 150, // Add placeholder
+                  }))
+                  .sort(() => Math.random() - 0.5);
+                this.loading = false;
+              })
+              .catch((error) => {
+                console.error("Error loading the URL mapping:", error);
+                this.error =
+                  "Sorry, there was an error loading the images.";
+                this.loading = false;
+              });
+          },
+
+          downloadImage(buttonElement, url) {
+            const originalText = "Download";
+            this.downloadButtonText = "Downloading...";
+            this.downloading = true; // Disable button
+
+            fetch(url, { mode: "cors" }) // Ensure CORS mode if needed
+              .then((response) => {
+                if (!response.ok)
+                  throw new Error(
+                    `Network response was not ok (${response.status})`
+                  );
+                return response.blob();
+              })
+              .then((blob) => {
+                const blobUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.style.display = "none";
+                a.href = blobUrl;
+                // Try to get a better filename
+                const filename =
+                  url.substring(url.lastIndexOf("/") + 1) ||
+                  "download.jpg";
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                // Cleanup after a short delay
+                setTimeout(() => {
+                  document.body.removeChild(a);
+                  window.URL.revokeObjectURL(blobUrl);
+                  this.downloadButtonText = originalText; // Restore text
+                  this.downloading = false; // Re-enable button
+                }, 150); // Slightly longer timeout
+              })
+              .catch((err) => {
+                console.error("Download failed:", err);
+                alert(
+                  "Download failed. Check console for details. CORS issues might prevent downloads from external origins directly."
+                );
+                this.downloadButtonText = originalText; // Restore text on error
+                this.downloading = false; // Re-enable button
+              });
+          },
+        };
+      }
+    </script>
+  </body>
+</html>
