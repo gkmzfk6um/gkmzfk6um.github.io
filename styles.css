@@ -1,93 +1,124 @@
-        :root {
-            font-family: 'Courier New', Courier, monospace !important;
-        }
-        body {
-            background: linear-gradient(135deg, #1a1a1a, #333333);
-            background-size: 400% 400%;
-            animation: gradientAnimation 10s ease infinite;
-            min-height: 100vh;
-        }
+:root {
+    font-family: 'Courier New', Courier, monospace !important;
+}
 
-        @keyframes gradientAnimation {
-            0% {
-                background-position: 0% 50%;
-            }
+body {
+    background: linear-gradient(135deg, #1a1a1a, #333333);
+    background-size: 400% 400%;
+    animation: gradientAnimation 10s ease infinite;
+    min-height: 100vh;
+}
 
-            50% {
-                background-position: 100% 50%;
-            }
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
 
-            100% {
-                background-position: 0% 50%;
-            }
-        }
+/* FLEX-BASED GALLERY LAYOUT */
+.gallery-row {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    align-items: flex-start;
+}
 
-        /* Keep CSS Columns for Masonry effect */
-        .gallery-columns {
-            column-count: 3;
-            column-gap: 1rem;
-            /* Corresponds to Bootstrap gutter */
-        }
+.gallery-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1 1 0;
+    min-width: 0;
+}
 
-        .gallery-columns .card {
-            break-inside: avoid;
-            /* Prevent cards breaking across columns */
-            margin-bottom: 1rem;
-            /* Spacing below cards */
-        }
+/* Responsive column widths */
+.gallery-row.columns-1 > .gallery-col {
+    width: 100%;
+}
+.gallery-row.columns-2 > .gallery-col {
+    width: 50%;
+}
+.gallery-row.columns-3 > .gallery-col {
+    width: 33.3333%;
+}
 
-        /* Responsive Columns */
-        @media (max-width: 992px) {
+/* Responsive breakpoints */
+@media (max-width: 992px) {
+    .gallery-row.columns-3 > .gallery-col {
+        width: 50%;
+    }
+    .gallery-row.columns-2 > .gallery-col,
+    .gallery-row.columns-3 > .gallery-col {
+        width: 50%;
+    }
+}
+@media (max-width: 768px) {
+    .gallery-row > .gallery-col {
+        width: 100%;
+    }
+}
 
-            /* Medium devices (tablets, less than 992px) */
-            .gallery-columns {
-                column-count: 2;
-            }
-        }
+/* Card styling */
+.card {
+    background: #222;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 1px solid #444;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
 
-        @media (max-width: 768px) {
+.card-img {
+    width: 100%;
+    display: block;
+    height: auto;
+    background: #111;
+}
 
-            /* Small devices (landscape phones, less than 768px) */
-            .gallery-columns {
-                column-count: 1;
-            }
-        }
+/* Overlay for card action buttons */
+.card-img-overlay {
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.6) 0%,
+        rgba(0, 0, 0, 0) 30%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
 
-        /* Style for card overlay buttons */
-        .card-img-overlay {
-            background: linear-gradient(to bottom,
-                    rgba(0, 0, 0, 0.6) 0%,
-                    rgba(0, 0, 0, 0) 30%);
-            /* Gradient for visibility */
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
+.card:hover .card-img-overlay,
+.card:focus-within .card-img-overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
 
-        .card:hover .card-img-overlay {
-            opacity: 1;
-        }
+.action-buttons {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+}
 
-        .action-buttons {
-            position: absolute;
-            top: 0.5rem;
-            left: 0.5rem;
-            display: flex;
-            gap: 0.5rem;
-        }
+/* Modal dark theme */
+.modal-content {
+    background-color: #343a40;
+    color: #f8f9fa;
+}
+.modal-header {
+    border-bottom: 1px solid #495057;
+}
+.btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
 
-        /* Ensure modal content is dark-themed if needed (kept in case modal is reused) */
-        .modal-content {
-            background-color: #343a40;
-            /* Dark background */
-            color: #f8f9fa;
-            /* Light text */
-        }
-
-        .modal-header {
-            border-bottom: 1px solid #495057;
-        }
-
-        .btn-close {
-            filter: invert(1) grayscale(100%) brightness(200%);
-            /* Make close button white */
-        }
+/* Spinner color override for dark bg */
+.spinner-border {
+    color: #fff;
+}
