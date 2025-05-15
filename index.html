@@ -52,8 +52,7 @@
                 <template x-for="(column, colIdx) in columns" :key="colIdx">
                     <div class="gallery-col flex-fill d-flex flex-column" style="gap: 1rem;">
                         <template x-for="(image, index) in column" :key="image.index">
-                            <div
-                                x-data="{
+                            <div x-data="{
                                     visible: false,
                                     observe(el) {
                                         let observer = new IntersectionObserver(
@@ -67,16 +66,11 @@
                                         );
                                         observer.observe(el);
                                     }
-                                }"
-                                x-init="observe($el)"
-                                class="card bg-dark text-white border-secondary"
-                                style="min-height: 200px;"
-                            >
+                                }" x-init="observe($el)" class="card bg-dark text-white border-secondary"
+                                style="min-height: 200px;">
                                 <template x-if="visible">
-                                    <img :src="image.urls.webp"
-                                         class="card-img"
-                                         :alt="'Art Image ' + image.index"
-                                         loading="lazy" />
+                                    <img :src="image.urls.webp" class="card-img" :alt="'Art Image ' + image.index"
+                                        loading="lazy" />
                                 </template>
                                 <template x-if="!visible">
                                     <div class="d-flex align-items-center justify-content-center" style="height:200px;">
