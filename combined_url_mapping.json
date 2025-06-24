@@ -162,7 +162,8 @@
   "42": {
     "hq": "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCduAYeNMgJBRrxdg7AT3WHz52DFNKoqUGsnbkI",
     "webp": "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdDTj7YwxO8Wp76hZyxL9QXl4Azwji1TRadeHY",
-    "music":"https://distrokid.com/hyperfollow/yaykay/--------2"
+    "music":"https://distrokid.com/hyperfollow/yaykay/--------2",
+    "mp3":"https://s3.amazonaws.com/audio.distrokid.com/preview_75158669_041F02CC-75EC-47C0-9068156F53C7D2BE.mp3"
   },
   "43": {
     "hq": "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdyVSfskzeYcnUD9tGTlEhuprF1ZN27QPyX5VS",
@@ -259,11 +260,13 @@
     "66": {
       "webp": "https://i.postimg.cc/WbG3nhr7/lkfsdjghlsjkdhf.webp",
       "hq": "https://i.postimg.cc/0y9NHP01/lkfsdjghlsjkdhf.png",
-      "music":"https://distrokid.com/hyperfollow/yaykay/---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+      "music":"https://distrokid.com/hyperfollow/yaykay/---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------",
+      "mp3":"https://s3.amazonaws.com/audio.distrokid.com/preview_76263023_A3A16F1B-3155-4C98-A1CC4EAD851A4151.mp3"
     },
     "67": {
       "webp": "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdD0Bef4xO8Wp76hZyxL9QXl4Azwji1TRadeHY",
       "hq": "https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdLzBoDcirji2rXpz4w9EAlBuN6SVKItUYdJ5m",
-      "music":"https://distrokid.com/hyperfollow/yaykay/DBnhuMbNhIO"
+      "music":"https://distrokid.com/hyperfollow/yaykay/DBnhuMbNhIO",
+      "mp3":"https://s3.amazonaws.com/audio.distrokid.com/preview_75789240_575CF33D-4069-4466-98E3D77D9720EA5C.mp3"
     }
 }
