@@ -72,6 +72,16 @@
                 <h6 class="text-center mb-4"><a href="https://creativecommons.org/publicdomain/zero/1.0/"
                         target="_blank" rel="noopener noreferrer">more about the license</a></h6>
             </header>
+
+            <!-- Subtle Autoplay Button (only shown when browser blocks autoplay) -->
+            <template x-if="showAutoplayButton && !currentPlaying">
+                <div class="text-center mb-3">
+                    <button class="btn btn-outline-light btn-sm" @click="playRandomMusic(); showAutoplayButton = false;">
+                        <i class="bi bi-play-fill me-1"></i>
+                        Enable Music
+                    </button>
+                </div>
+            </template>
             <!-- Loading State -->
             <template x-if="loading">
                 <div class="d-flex justify-content-center my-5">
@@ -204,6 +214,7 @@
                         columnCount: 3, // default
                         currentPlaying: null,
                         audioElement: null,
+                        showAutoplayButton: false,
 
                         get romanCount() {
                             return toRoman(this.images.length);
@@ -268,8 +279,8 @@
                                         .sort(() => Math.random() - 0.5); // Randomize order
                                     this.loading = false;
 
-                                    // Auto-play random music after images load
-                                    this.playRandomMusic();
+                                    // Try to auto-play random music after images load (respects browser policies)
+                                    this.attemptAutoplay();
                                 })
                                 .catch((error) => {
                                     console.error("Error loading the URL mapping:", error);
@@ -277,6 +288,30 @@
                                         "Sorry, there was an error loading the images.";
                                     this.loading = false;
                                 });
+                        },
+
+                        // Attempt to autoplay music while respecting browser policies
+                        async attemptAutoplay() {
+                            try {
+                                const canAutoplay = await this.canAutoplay();
+                                if (canAutoplay) {
+                                    this.playRandomMusic();
+                                    this.showAutoplayButton = false; // Hide button if autoplay works
+                                } else {
+                                    // Only show button if browser actually blocks autoplay
+                                    console.log('Browser blocked autoplay, showing manual play button');
+                                    this.showAutoplayButton = true;
+                                }
+                            } catch (error) {
+                                // Only show button on actual autoplay errors, not other errors
+                                if (error.name === 'NotAllowedError' || error.name === 'NotSupportedError') {
+                                    console.log('Autoplay blocked by browser policy');
+                                    this.showAutoplayButton = true;
+                                } else {
+                                    console.log('Other error occurred, not showing autoplay button');
+                                    this.showAutoplayButton = false;
+                                }
+                            }
                         },
 
                         playRandomMusic() {
@@ -287,9 +322,26 @@
                                 // Randomly select one music track
                                 const randomMusic = musicImages[Math.floor(Math.random() * musicImages.length)];
 
-                                // Play the randomly selected music
+                                // Try to play the randomly selected music (respects autoplay policies)
                                 this.playMusic(randomMusic.urls.mp3, randomMusic.index);
                             }
+                        },
+
+                        // Check if autoplay is allowed by the browser
+                        canAutoplay() {
+                            // Modern browsers block autoplay by default
+                            // We'll try to play a silent audio to test if autoplay is allowed
+                            return new Promise((resolve) => {
+                                const testAudio = new Audio();
+                                testAudio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT';
+                                testAudio.volume = 0;
+                                testAudio.play().then(() => {
+                                    testAudio.pause();
+                                    resolve(true);
+                                }).catch(() => {
+                                    resolve(false);
+                                });
+                            });
                         },
 
                         playMusic(mp3Url, imageIndex) {
