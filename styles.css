@@ -122,3 +122,103 @@ body {
 .spinner-border {
     color: #fff;
 }
+
+/* Mobile-specific fixes */
+@media (orientation: portrait) {
+    /* Fix play button z-index so it's not on top of Now Playing dialog */
+    .play-button {
+        z-index: 5;
+    }
+
+    /* Add margin above header to account for Now Playing widget height */
+    header.container {
+        margin-top: 80px;
+    }
+}
+
+/* Play Button Styles */
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid white;
+    color: white;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+/* Perfect centering for icons */
+.play-button i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    line-height: 1;
+}
+
+/* Slight adjustment for play icon visual centering */
+.play-button .bi-play-fill {
+    transform: translateX(1px);
+}
+
+.play-button:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.play-button.playing {
+    animation: rotate 2s linear infinite;
+}
+
+/* Rotating stop button in Now Playing dialog */
+.btn.active i {
+    animation: rotateIcon 2s linear infinite;
+    display: inline-block;
+    transform-origin: center;
+}
+
+/* Now Playing Dialog Styles */
+.now-playing-dialog {
+    pointer-events: auto;
+    background: rgba(20, 20, 20, 0.85);
+    backdrop-filter: saturate(120%) blur(6px);
+    -webkit-backdrop-filter: saturate(120%) blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 10px 14px;
+    max-width: min(92vw, 640px);
+}
+
+.now-playing-container {
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* Animation Keyframes */
+@keyframes rotate {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes rotateIcon {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

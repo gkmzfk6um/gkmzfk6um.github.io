@@ -16,24 +16,62 @@
     <link rel="stylesheet" href="styles.css" />
 
     <title>✨ Bilder (●'◡'●)</title>
+
 </head>
 
 <body class="text-light">
     <!-- Alpine.js Component Scope -->
     <div x-data="imageGallery()" x-init="initGallery()" @keydown.escape.window="closeModal()">
         <div class="container py-4">
-            <h2 class="text-center mb-1">
-                Images! - <span x-text="romanCount"></span><sup x-text="actualCount"></sup>
-                <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener noreferrer">
-                    <img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/cc-zero.png"
-                        alt="Creative Commons Public Domain Zero"
-                        style="vertical-align: middle; margin-left: 10px; height: 2rem;" /></a>
-            </h2>
-            <h5 class="text-center mb-4">
-                All images are in the public domain under the CC0 1.0 Universal
-                license.
-            </h5>
-            <h6 class="text-center mb-4"><a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener noreferrer">more about the license</a></h6>
+
+            <!-- Current Playing Display - Positioned absolutely at the very top left -->
+            <!-- Now Playing: fixed, safe spacing, one-line truncation, accessible -->
+            <div class="position-fixed start-0 top-0 p-3 now-playing-container" aria-live="polite">
+                <template x-if="currentPlaying">
+                    <div class="d-flex align-items-center gap-3 rounded-3 shadow-lg now-playing-dialog">
+                        <span class="text-light fw-semibold text-nowrap">Now Playing</span>
+
+                        <button class="btn btn-sm btn-outline-light d-inline-flex align-items-center"
+                            :class="{ active: currentPlaying }" @click="stopMusic()" title="Pause music"
+                            aria-label="Pause music" style="--bs-btn-border-color: rgba(255,255,255,.35)">
+                            <i class="bi bi-pause-fill fs-5 lh-1"></i>
+                        </button>
+
+                        <div class="text-light flex-grow-1 overflow-hidden">
+                            <div class="fw-semibold text-truncate"
+                                x-text="getCurrentTrackInfo().name || 'Unknown Track'"
+                                x-bind:title="getCurrentTrackInfo().name || 'Unknown Track'"></div>
+                            <div class="text-white-50 small text-truncate"
+                                x-text="getCurrentTrackInfo().artist || 'Unknown Artist'"
+                                x-bind:title="getCurrentTrackInfo().artist || 'Unknown Artist'"></div>
+                        </div>
+
+                        <!-- Arrow link to the currently playing element -->
+                        <a :href="'#element-' + getCurrentTrackInfo().index"
+                            class="text-decoration-none text-light d-inline-flex align-items-center"
+                            title="Go to element" aria-label="Go to element" style="opacity: 0.9">
+                            <i class="bi bi-arrow-right-circle-fill fs-5"></i>
+                        </a>
+                    </div>
+                </template>
+            </div>
+
+            <header class="container">
+                <h2 class="text-center mb-1">
+                    Images! - <span x-text="romanCount"></span><sup x-text="actualCount"></span>
+                        <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank"
+                            rel="noopener noreferrer">
+                            <img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/cc-zero.png"
+                                alt="Creative Commons Public Domain Zero"
+                                style="vertical-align: middle; margin-left: 10px; height: 2rem;" /></a>
+                </h2>
+                <h5 class="text-center mb-4">
+                    All images are in the public domain under the CC0 1.0 Universal
+                    license.
+                </h5>
+                <h6 class="text-center mb-4"><a href="https://creativecommons.org/publicdomain/zero/1.0/"
+                        target="_blank" rel="noopener noreferrer">more about the license</a></h6>
+            </header>
             <!-- Loading State -->
             <template x-if="loading">
                 <div class="d-flex justify-content-center my-5">
@@ -66,7 +104,8 @@
                                         );
                                         observer.observe(el);
                                     }
-                                }" x-init="observe($el)" class="card bg-dark text-white border-secondary"
+                                }" x-init="observe($el)" :id="'element-' + image.index"
+                                class="card bg-dark text-white border-secondary position-relative"
                                 style="min-height: 200px;">
                                 <template x-if="visible">
                                     <img :src="image.urls.webp" class="card-img" :alt="'Art Image ' + image.index"
@@ -77,6 +116,18 @@
                                         <div class="spinner-border text-light" role="status"></div>
                                     </div>
                                 </template>
+
+                                <!-- Play Button for Music Entries -->
+                                <template x-if="image.urls.mp3">
+                                    <button class="play-button"
+                                        :class="{ 'playing': currentPlaying === image.urls.mp3 }"
+                                        @click="playMusic(image.urls.mp3, image.index)"
+                                        :title="currentPlaying === image.urls.mp3 ? 'Stop Music' : 'Play Music'">
+                                        <i x-show="currentPlaying !== image.urls.mp3" class="bi bi-play-fill"></i>
+                                        <i x-show="currentPlaying === image.urls.mp3" class="bi bi-pause-fill"></i>
+                                    </button>
+                                </template>
+
                                 <!-- Overlay for Buttons -->
                                 <div class="card-img-overlay p-0">
                                     <div class="action-buttons">
@@ -94,6 +145,13 @@
                                                 aria-hidden="true"></span>
                                             <i x-show="downloading !== image.urls.hq" class="bi bi-download"></i>
                                         </button>
+                                        <!-- Music Link Button -->
+                                        <template x-if="image.urls.music">
+                                            <a :href="image.urls.music" target="_blank" rel="noopener noreferrer"
+                                                class="btn btn-sm btn-outline-light" title="Listen on Music Platform">
+                                                <i class="bi bi-music-note-beamed"></i>
+                                            </a>
+                                        </template>
                                     </div>
                                 </div>
                             </div>
@@ -144,6 +202,8 @@
                         modalImageUrl: "",
                         downloading: null,
                         columnCount: 3, // default
+                        currentPlaying: null,
+                        audioElement: null,
 
                         get romanCount() {
                             return toRoman(this.images.length);
@@ -207,6 +267,9 @@
                                         .map(([index, urls]) => ({ index, urls }))
                                         .sort(() => Math.random() - 0.5); // Randomize order
                                     this.loading = false;
+
+                                    // Auto-play random music after images load
+                                    this.playRandomMusic();
                                 })
                                 .catch((error) => {
                                     console.error("Error loading the URL mapping:", error);
@@ -216,6 +279,80 @@
                                 });
                         },
 
+                        playRandomMusic() {
+                            // Get all images that have MP3 files
+                            const musicImages = this.images.filter(img => img.urls.mp3);
+
+                            if (musicImages.length > 0) {
+                                // Randomly select one music track
+                                const randomMusic = musicImages[Math.floor(Math.random() * musicImages.length)];
+
+                                // Play the randomly selected music
+                                this.playMusic(randomMusic.urls.mp3, randomMusic.index);
+                            }
+                        },
+
+                        playMusic(mp3Url, imageIndex) {
+                            // If clicking the same music that's playing, stop it
+                            if (this.currentPlaying === mp3Url) {
+                                this.stopMusic();
+                                return;
+                            }
+
+                            // Stop any currently playing music
+                            this.stopMusic();
+
+                            // Create new audio element
+                            this.audioElement = new Audio(mp3Url);
+                            this.currentPlaying = mp3Url;
+
+                            // Enable looping
+                            this.audioElement.loop = true;
+
+                            // Play the music
+                            this.audioElement.play().catch(error => {
+                                console.error('Error playing audio:', error);
+                                this.currentPlaying = null;
+                            });
+
+                            // Handle errors
+                            this.audioElement.addEventListener('error', (error) => {
+                                console.error('Audio error:', error);
+                                this.currentPlaying = null;
+                            });
+                        },
+
+                        stopMusic() {
+                            if (this.audioElement) {
+                                this.audioElement.pause();
+                                this.audioElement.currentTime = 0;
+                                this.audioElement = null;
+                            }
+                            this.currentPlaying = null;
+                        },
+
+                        getCurrentTrackInfo() {
+                            if (!this.currentPlaying) return { name: '', artist: '', index: '' };
+
+                            // Extract track info from the MP3 URL
+                            // Assuming URL format contains track info or we can get it from the image data
+                            const currentImage = this.images.find(img => img.urls.mp3 === this.currentPlaying);
+                            if (currentImage) {
+                                // Use the actual title if available, otherwise fallback to track number
+                                const trackName = currentImage.urls.title || `Track ${currentImage.index}`;
+                                return {
+                                    name: trackName,
+                                    artist: '_yay_kay_',
+                                    index: currentImage.index
+                                };
+                            }
+
+                            return {
+                                name: 'Unknown Track',
+                                artist: '_yay_kay_',
+                                index: ''
+                            };
+                        },
 
                         downloadImage(buttonElement, url) {
                             if (this.downloading) return; // Prevent multiple downloads
