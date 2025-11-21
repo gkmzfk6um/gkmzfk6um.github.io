@@ -19,7 +19,8 @@
 
     <!-- Open Graph Meta Tags for Social Media Embeds -->
     <meta property="og:title" content="✨ Bilder (●'◡'●) - Public Domain Art Collection" />
-    <meta property="og:description" content="A collection of beautiful public domain art images under CC0 1.0 Universal license. Discover and download high-quality artwork." />
+    <meta property="og:description"
+        content="A collection of beautiful public domain art images under CC0 1.0 Universal license. Discover and download high-quality artwork." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="" />
     <meta property="og:site_name" content="Bilder Art Gallery" />
@@ -27,17 +28,18 @@
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="✨ Bilder (●'◡'●) - Public Domain Art Collection" />
-    <meta name="twitter:description" content="A collection of beautiful public domain art images under CC0 1.0 Universal license. Discover and download high-quality artwork." />
+    <meta name="twitter:description"
+        content="A collection of beautiful public domain art images under CC0 1.0 Universal license. Discover and download high-quality artwork." />
 
-    <!-- Dynamic Open Graph Image - Will be set by JavaScript -->
-    <meta property="og:image" content="" />
+    <!-- Open Graph Image (Static for Crawlers) -->
+    <meta property="og:image" content="https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdPJ5gy110R8WemhtjVCM19TBGyQAx4XH7Ncno" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Random Art Image from Public Domain Collection" />
+    <meta property="og:image:alt" content="Art Image from Public Domain Collection" />
 
     <!-- Twitter Image -->
-    <meta name="twitter:image" content="" />
-    <meta name="twitter:image:alt" content="Random Art Image from Public Domain Collection" />
+    <meta name="twitter:image" content="https://pnj6i4tj3g.ufs.sh/f/RiH3sMpSQNCdPJ5gy110R8WemhtjVCM19TBGyQAx4XH7Ncno" />
+    <meta name="twitter:image:alt" content="Art Image from Public Domain Collection" />
 
 </head>
 
@@ -51,12 +53,14 @@
             <div class="position-fixed start-0 top-0 p-3 now-playing-container" aria-live="polite">
                 <template x-if="currentPlaying">
                     <div class="d-flex align-items-center gap-3 rounded-3 shadow-lg now-playing-dialog"
-                         :class="{ 'playing': currentPlaying && !isPaused }">
+                        :class="{ 'playing': currentPlaying && !isPaused }">
                         <span class="text-light fw-semibold text-nowrap">Now Playing</span>
 
                         <button class="btn btn-sm btn-outline-light d-inline-flex align-items-center"
-                            :class="{ active: currentPlaying }" @click="toggleMusic()" :title="isPaused ? 'Resume music' : 'Pause music'"
-                            :aria-label="isPaused ? 'Resume music' : 'Pause music'" style="--bs-btn-border-color: rgba(255,255,255,.35)">
+                            :class="{ active: currentPlaying }" @click="toggleMusic()"
+                            :title="isPaused ? 'Resume music' : 'Pause music'"
+                            :aria-label="isPaused ? 'Resume music' : 'Pause music'"
+                            style="--bs-btn-border-color: rgba(255,255,255,.35)">
                             <i :class="isPaused ? 'bi bi-play-fill' : 'bi bi-pause-fill'" class="fs-5 lh-1"></i>
                         </button>
 
@@ -99,7 +103,8 @@
             <!-- Subtle Autoplay Button (only shown when browser blocks autoplay) -->
             <template x-if="showAutoplayButton && !currentPlaying">
                 <div class="text-center mb-3">
-                    <button class="btn btn-outline-light btn-sm" @click="playRandomMusic(); showAutoplayButton = false;">
+                    <button class="btn btn-outline-light btn-sm"
+                        @click="playRandomMusic(); showAutoplayButton = false;">
                         <i class="bi bi-play-fill me-1"></i>
                         Enable Music
                     </button>
@@ -303,9 +308,6 @@
                                         .sort(() => Math.random() - 0.5); // Randomize order
                                     this.loading = false;
 
-                                    // Set random image for Open Graph meta tags
-                                    this.setRandomOpenGraphImage();
-
                                     // Try to auto-play random music after images load (respects browser policies)
                                     this.attemptAutoplay();
                                 })
@@ -315,32 +317,6 @@
                                         "Sorry, there was an error loading the images.";
                                     this.loading = false;
                                 });
-                        },
-
-                        // Set a random image for Open Graph meta tags
-                        setRandomOpenGraphImage() {
-                            if (this.images.length > 0) {
-                                // Select a random image
-                                const randomImage = this.images[Math.floor(Math.random() * this.images.length)];
-
-                                // Use the high-quality image URL for better social media display
-                                const imageUrl = randomImage.urls.hq || randomImage.urls.webp;
-
-                                if (imageUrl) {
-                                    // Update Open Graph meta tags
-                                    const ogImage = document.querySelector('meta[property="og:image"]');
-                                    const twitterImage = document.querySelector('meta[name="twitter:image"]');
-
-                                    if (ogImage) ogImage.setAttribute('content', imageUrl);
-                                    if (twitterImage) twitterImage.setAttribute('content', imageUrl);
-
-                                    // Also set the current page URL for Open Graph
-                                    const ogUrl = document.querySelector('meta[property="og:url"]');
-                                    if (ogUrl) ogUrl.setAttribute('content', window.location.href);
-
-                                    console.log('Open Graph image set to:', imageUrl);
-                                }
-                            }
                         },
 
                         // Attempt to autoplay music while respecting browser policies
