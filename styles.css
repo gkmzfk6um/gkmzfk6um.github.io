@@ -181,12 +181,14 @@ body {
     animation: rotate 2s linear infinite;
 }
 
-/* Rotating stop button in Now Playing dialog */
-.btn.active i {
-    animation: rotateIcon 2s linear infinite;
+/* Remove spinning from Now Playing dialog buttons */
+.now-playing-dialog .btn.active i {
+    animation: none;
     display: inline-block;
     transform-origin: center;
 }
+
+/* Remove the old rotateIcon animation since we're not using it anymore */
 
 /* Now Playing Dialog Styles */
 .now-playing-dialog {
@@ -197,6 +199,12 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.08);
     padding: 10px 14px;
     max-width: min(92vw, 640px);
+}
+
+/* Gentle waving animation when music is playing */
+.now-playing-dialog.playing {
+    animation: musicWave 3s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 .now-playing-container {
@@ -220,5 +228,28 @@ body {
     }
     to {
         transform: rotate(360deg);
+    }
+}
+
+@keyframes musicWave {
+    0% {
+        transform: translateX(0px) rotate(0deg);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+    25% {
+        transform: translateX(2px) rotate(0.5deg);
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
+    }
+    50% {
+        transform: translateX(0px) rotate(0deg);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+    75% {
+        transform: translateX(-2px) rotate(-0.5deg);
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
+    }
+    100% {
+        transform: translateX(0px) rotate(0deg);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
     }
 }
