@@ -1,3 +1,24 @@
 User-agent: *
+Allow: /
+
+# Block OpenAI
+User-agent: GPTBot
 Disallow: /
-Disallow: *
+
+# Block Common Crawl (often used for training)
+User-agent: CCBot
+Disallow: /
+
+# Block Google AI
+User-agent: Google-Extended
+Disallow: /
+
+# Block Anthropic
+User-agent: anthropic-ai
+Disallow: /
+User-agent: Claude-Web
+Disallow: /
+
+# Block Facebook AI
+User-agent: FacebookBot
+Disallow: /

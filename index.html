@@ -308,35 +308,51 @@
                                         .map(([index, urls]) => ({ index, urls }))
                                         .sort(() => Math.random() - 0.5); // Randomize order
                                     this.loading = false;
-
-                                    // Try to auto-play random music after images load (respects browser policies)
                                     this.attemptAutoplay();
                                 })
                                 .catch((error) => {
                                     console.error("Error loading the URL mapping:", error);
-                                    this.error =
-                                        "Sorry, there was an error loading the images.";
+                                    this.error = "Sorry, there was an error loading the images.";
                                     this.loading = false;
                                 });
                         },
 
-                        // Attempt to autoplay music while respecting browser policies
                         async attemptAutoplay() {
                             try {
                                 const canAutoplay = await this.canAutoplay();
                                 if (canAutoplay) {
                                     this.playRandomMusic();
-                                    this.showAutoplayButton = false; // Hide button if autoplay works
+                                    this.showAutoplayButton = false;
                                 } else {
-                                    // Only show button if browser actually blocks autoplay
                                     console.log('Browser blocked autoplay, showing manual play button');
                                     this.showAutoplayButton = true;
+
+                                    const startOnInteraction = () => {
+                                        if (!this.currentPlaying) {
+                                            this.playRandomMusic();
+                                            this.showAutoplayButton = false;
+                                        }
+                                        document.removeEventListener('click', startOnInteraction);
+                                        document.removeEventListener('keydown', startOnInteraction);
+                                    };
+                                    document.addEventListener('click', startOnInteraction);
+                                    document.addEventListener('keydown', startOnInteraction);
                                 }
                             } catch (error) {
-                                // Only show button on actual autoplay errors, not other errors
                                 if (error.name === 'NotAllowedError' || error.name === 'NotSupportedError') {
                                     console.log('Autoplay blocked by browser policy');
                                     this.showAutoplayButton = true;
+
+                                    const startOnInteraction = () => {
+                                        if (!this.currentPlaying) {
+                                            this.playRandomMusic();
+                                            this.showAutoplayButton = false;
+                                        }
+                                        document.removeEventListener('click', startOnInteraction);
+                                        document.removeEventListener('keydown', startOnInteraction);
+                                    };
+                                    document.addEventListener('click', startOnInteraction);
+                                    document.addEventListener('keydown', startOnInteraction);
                                 } else {
                                     console.log('Other error occurred, not showing autoplay button');
                                     this.showAutoplayButton = false;
@@ -345,22 +361,14 @@
                         },
 
                         playRandomMusic() {
-                            // Get all images that have MP3 files
                             const musicImages = this.images.filter(img => img.urls.mp3);
-
                             if (musicImages.length > 0) {
-                                // Randomly select one music track
                                 const randomMusic = musicImages[Math.floor(Math.random() * musicImages.length)];
-
-                                // Try to play the randomly selected music (respects autoplay policies)
                                 this.playMusic(randomMusic.urls.mp3, randomMusic.index);
                             }
                         },
 
-                        // Check if autoplay is allowed by the browser
                         canAutoplay() {
-                            // Modern browsers block autoplay by default
-                            // We'll try to play a silent audio to test if autoplay is allowed
                             return new Promise((resolve) => {
                                 const testAudio = new Audio();
                                 testAudio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT';
@@ -375,35 +383,21 @@
                         },
 
                         playMusic(mp3Url, imageIndex) {
-                            // If clicking the same music that's playing, stop it
                             if (this.currentPlaying === mp3Url) {
                                 this.stopMusic();
                                 return;
                             }
 
-                            // Stop any currently playing music
                             this.stopMusic();
-
-                            // Create new audio element
                             this.audioElement = new Audio(mp3Url);
                             this.currentPlaying = mp3Url;
-
-                            // Set volume to 25%
                             this.audioElement.volume = 0.25;
-
-                            // Enable looping
                             this.audioElement.loop = true;
-
-                            // Reset pause state
                             this.isPaused = false;
-
-                            // Play the music
                             this.audioElement.play().catch(error => {
                                 console.error('Error playing audio:', error);
                                 this.currentPlaying = null;
                             });
-
-                            // Handle errors
                             this.audioElement.addEventListener('error', (error) => {
                                 console.error('Audio error:', error);
                                 this.currentPlaying = null;
