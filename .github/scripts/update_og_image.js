@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const jsonPath = path.join(__dirname, '../../combined_url_mapping.json');
-const htmlPath = path.join(__dirname, '../../index.html');
+const dataPath = path.join(__dirname, '../../_data/og_metadata.yml');
 
 try {
     // Read the JSON file
@@ -28,26 +28,14 @@ try {
 
     console.log(`Selected random image: ${imageUrl}`);
 
-    // Read index.html
-    let htmlContent = fs.readFileSync(htmlPath, 'utf8');
+    // Create YAML content
+    const yamlContent = `image: ${imageUrl}
+image_alt: Art Image from Public Domain Collection
+`;
 
-    // Regex to replace og:image content
-    const ogImageRegex = /<meta property="og:image" content="[^"]*" \/>/;
-    const twitterImageRegex = /<meta name="twitter:image" content="[^"]*" \/>/;
-
-    // Check if tags exist
-    if (!ogImageRegex.test(htmlContent) || !twitterImageRegex.test(htmlContent)) {
-        console.error('Could not find og:image or twitter:image meta tags in index.html');
-        // If they don't exist, we might want to add them, but for now let's assume they are there (I just added them)
-    }
-
-    // Replace content
-    htmlContent = htmlContent.replace(ogImageRegex, `<meta property="og:image" content="${imageUrl}" />`);
-    htmlContent = htmlContent.replace(twitterImageRegex, `<meta name="twitter:image" content="${imageUrl}" />`);
-
-    // Write back to index.html
-    fs.writeFileSync(htmlPath, htmlContent, 'utf8');
-    console.log('Successfully updated index.html with new random Open Graph image.');
+    // Write to _data/og_metadata.yml
+    fs.writeFileSync(dataPath, yamlContent, 'utf8');
+    console.log('Successfully updated _data/og_metadata.yml with new random Open Graph image.');
 
 } catch (error) {
     console.error('Error updating Open Graph image:', error);
